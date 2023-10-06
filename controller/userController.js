@@ -14,7 +14,7 @@ const userRegister = async (req, res) => {
     await firestore().collection("users").doc(newUser.uid).set({
       firstName, lastName, mobileNo
     })
-    await addProfilePhoto(profilePhoto, newUser.uid);
+    await addUserProfilePhoto(profilePhoto, newUser.uid);
     res.status(200).send({ message: "User created and data uploaded successfully", newUser })
   } catch (err) {
     res.status(500).send(err.message)
