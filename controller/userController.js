@@ -1,20 +1,20 @@
 const { auth, firestore } = require("firebase-admin")
 const { addUserProfilePhoto } = require("../helper/helperFunction")
+const { validationResult, matchedData } = require('express-validator');
 const userRegister = async (req, res) => {
-  const { firstName, lastName, mobileNo, email, password, profilePhoto, confirmPassword } = req.body;
-  if (!firstName || !lastName || !mobileNo || !email || !password || !confirmPassword || !profilePhoto) {
-    res.status(404).send({ message: "Please fill all the required fields" })
-  } else if (password != confirmPassword) {
-    res.status(401).send({ message: "Password and confirmPassword should be same" })
+  const validateFieldErrors = validationResult(req);
+  if (!validateFieldErrors.isEmpty()) {
+    res.status(404).send({ validateFieldErrors })
   }
+  const bodyData = matchedData(req);
   try {
     const newUser = await auth().createUser({
-      email, password
+      email: bodyData.email, password: bodyData.password
     })
     await firestore().collection("users").doc(newUser.uid).set({
-      firstName, lastName, mobileNo
+      firstName: bodyData.firstName, lastName: bodyData.lastName, mobileNo: bodyData.mobileNo
     })
-    await addUserProfilePhoto(profilePhoto, newUser.uid);
+    await addUserProfilePhoto(bodyData.profilePhoto, newUser.uid);
     res.status(200).send({ message: "User created and data uploaded successfully", newUser })
   } catch (err) {
     res.status(500).send(err.message)
