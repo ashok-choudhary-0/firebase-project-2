@@ -20,4 +20,13 @@ const userRegister = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { userRegister }
+const createFirebaseToken = async (req, res) => {
+  const { user_id } = req.headers;
+  try {
+    const userToken = await auth().createCustomToken(user_id);
+    res.status(200).send(userToken);
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { userRegister, createFirebaseToken }
