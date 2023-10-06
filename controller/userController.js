@@ -1,5 +1,5 @@
 const { auth, firestore } = require("firebase-admin")
-const { addProfilePhoto } = require("../helper/helperFunction")
+const { addUserProfilePhoto } = require("../helper/helperFunction")
 const userRegister = async (req, res) => {
   const { firstName, lastName, mobileNo, email, password, profilePhoto, confirmPassword } = req.body;
   if (!firstName || !lastName || !mobileNo || !email || !password || !confirmPassword || !profilePhoto) {
