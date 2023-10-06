@@ -21,10 +21,10 @@ const userRegister = async (req, res) => {
   }
 }
 const createFirebaseToken = async (req, res) => {
-  const { user_id } = req.headers;
+  const { uuid } = req.headers;
   try {
-    const userToken = await auth().createCustomToken(user_id);
-    res.status(200).send(userToken);
+    const userFirebaseToken = await auth().createCustomToken(uuid);
+    res.status(200).send(userFirebaseToken);
   } catch (err) {
     res.status(500).send(err.message)
   }
