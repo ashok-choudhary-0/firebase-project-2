@@ -29,4 +29,14 @@ const createFirebaseToken = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { userRegister, createFirebaseToken }
+const updateUserDetails = async (req, res) => {
+  const { firstName, lastName, mobileNo, profilePhoto } = req.body;
+  const { uid } = req.headers;
+  try {
+    const updated = await auth().updateUser(uid, { customClaims: { firstName: firstName, lastName: lastName, mobileNo, profilePhoto } });
+    res.status(200).send({ message: "User data updated successfully", updated })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { userRegister, createFirebaseToken, updateUserDetails }
