@@ -1,12 +1,12 @@
 const { auth, firestore } = require("firebase-admin")
-const { addUserProfilePhoto } = require("../helper/helperFunction")
 const { validationResult, matchedData } = require('express-validator');
 const admin = require("firebase-admin")
 const slugify = require('slugify')
 const userRegister = async (req, res) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
-    res.status(404).send({ validateFieldErrors })
+    res.status(404).send({ validateFieldErrors });
+    return;
   }
   const bodyData = matchedData(req);
   try {
@@ -16,7 +16,6 @@ const userRegister = async (req, res) => {
     await firestore().collection("users").doc(newUser.uid).set({
       firstName: bodyData.firstName, lastName: bodyData.lastName, mobileNo: bodyData.mobileNo
     })
-    await addUserProfilePhoto(bodyData.profilePhoto, newUser.uid, 'profilePhotos');
     res.status(200).send({ message: "User created and data uploaded successfully", newUser })
   } catch (err) {
     res.status(500).send(err.message)
@@ -45,6 +44,7 @@ const createPost = async (req, res) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
     res.status(404).send({ validateFieldErrors })
+    return;
   }
   const bodyData = matchedData(req);
   try {
@@ -54,10 +54,34 @@ const createPost = async (req, res) => {
     const newPost = await firestore().collection("posts").doc(bodyData.uid).set({
       title: bodyData.title, description: bodyData.description, slug: slugUrl, updatedAt: createdAt, createdAt, updatedBy: `${user._fieldsProto.firstName.stringValue} ${user._fieldsProto.lastName.stringValue}`
     })
-    await addUserProfilePhoto(bodyData.photo, bodyData.uid, "Posts");
     res.status(200).send({ message: "Post created successfully", newPost })
   } catch (err) {
     res.status(500).send(err.message)
   }
 }
-module.exports = { userRegister, createFirebaseToken, updateUserDetails, createPost }
+const uploadImage = async (req, res) => {
+  const { uid } = req.headers
+  const file = req.file;
+  if (!file) {
+    res.status(404).send({ message: "Image not found" });
+    return;
+  }
+  const fileName = Date.now() + '-' + file.originalname
+  try {
+    const bucket = admin.storage().bucket();
+    const fileRef = bucket.file(`images/${uid}/${fileName}`);
+    await fileRef.save(file.buffer, {
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+    const downloadURL = await fileRef.getSignedUrl({
+      action: 'read',
+      expires: '01-01-2040',
+    });
+    res.status(200).send({ message: "Image uploaded successfully", downloadURL })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { userRegister, createFirebaseToken, updateUserDetails, createPost, uploadImage }

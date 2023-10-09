@@ -10,7 +10,6 @@ const validateFields = [
 const validatePostFields = [
   body("title").notEmpty(),
   body("description").notEmpty(),
-  body("photo").notEmpty(),
   body("slug").notEmpty(),
   header("uid").notEmpty()
 ]
