@@ -1,6 +1,7 @@
 const { auth, firestore } = require("firebase-admin")
 const { addUserProfilePhoto } = require("../helper/helperFunction")
 const { validationResult, matchedData } = require('express-validator');
+const admin = require("firebase-admin")
 const userRegister = async (req, res) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -30,11 +31,11 @@ const createFirebaseToken = async (req, res) => {
   }
 }
 const updateUserDetails = async (req, res) => {
-  const { firstName, lastName, mobileNo, profilePhoto } = req.body;
+  const { firstName, lastName, mobileNo } = req.body;
   const { uid } = req.headers;
   try {
-    const updated = await auth().updateUser(uid, { customClaims: { firstName: firstName, lastName: lastName, mobileNo, profilePhoto } });
-    res.status(200).send({ message: "User data updated successfully", updated })
+    await admin.firestore().collection('users').doc(uid).update({ firstName, lastName, mobileNo });
+    res.status(200).send({ message: "User data updated successfully" })
   } catch (err) {
     res.status(500).send(err.message)
   }
