@@ -66,8 +66,8 @@ const uploadImage = async (req, res) => {
   if (!validateFieldErrors.isEmpty()) {
     res.status(404).send({ validateFieldErrors })
     return;
-  }else if(!uid){
-    res.status(404).send({ message:"Header uid not found"})
+  } else if (!uid) {
+    res.status(404).send({ message: "Header uid not found" })
     return;
   }
   try {
