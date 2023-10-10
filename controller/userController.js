@@ -60,14 +60,18 @@ const createPost = async (req, res) => {
   }
 }
 const uploadImage = async (req, res) => {
-  const { uid } = req.headers
+  const { uid } = req.headers;
   const file = req.file;
-  if (!file) {
-    res.status(404).send({ message: "Image not found" });
+  const validateFieldErrors = validationResult(req);
+  if (!validateFieldErrors.isEmpty()) {
+    res.status(404).send({ validateFieldErrors })
+    return;
+  }else if(!uid){
+    res.status(404).send({ message:"Header uid not found"})
     return;
   }
-  const fileName = Date.now() + '-' + file.originalname
   try {
+    const fileName = Date.now() + '-' + file.originalname
     const bucket = admin.storage().bucket();
     const fileRef = bucket.file(`images/${uid}/${fileName}`);
     await fileRef.save(file.buffer, {
