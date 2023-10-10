@@ -1,4 +1,4 @@
-const { body, header } = require("express-validator")
+const { body, header, validationResult } = require("express-validator")
 const validateFields = [
   body("firstName").notEmpty(),
   body("lastName").notEmpty(),
@@ -13,4 +13,12 @@ const validatePostFields = [
   body("slug").notEmpty(),
   header("uid").notEmpty()
 ]
-module.exports = { validateFields, validatePostFields }
+const validateFieldErrors = (req, res, next) => {
+  const validateFieldErrors = validationResult(req);
+  if (!validateFieldErrors.isEmpty()) {
+    res.status(404).send({ validateFieldErrors })
+    return;
+  }
+  next();
+}
+module.exports = { validateFields, validatePostFields, validateFieldErrors }

@@ -1,7 +1,6 @@
 const { auth, firestore } = require("firebase-admin")
 const { validationResult, matchedData } = require('express-validator');
 const admin = require("firebase-admin")
-const slugify = require('slugify')
 const userRegister = async (req, res) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -40,33 +39,11 @@ const updateUserDetails = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-const createPost = async (req, res) => {
-  const validateFieldErrors = validationResult(req);
-  if (!validateFieldErrors.isEmpty()) {
-    res.status(404).send({ validateFieldErrors })
-    return;
-  }
-  const bodyData = matchedData(req);
-  try {
-    const user = await firestore().collection("users").doc(bodyData.uid).get();
-    const createdAt = firestore.FieldValue.serverTimestamp()
-    const slugUrl = `http://localhost:8000/user/create-new-post/${slugify(bodyData.slug)}`
-    const newPost = await firestore().collection("posts").doc(bodyData.uid).set({
-      title: bodyData.title, description: bodyData.description, slug: slugUrl, updatedAt: createdAt, createdAt, updatedBy: `${user._fieldsProto.firstName.stringValue} ${user._fieldsProto.lastName.stringValue}`
-    })
-    res.status(200).send({ message: "Post created successfully", newPost })
-  } catch (err) {
-    res.status(500).send(err.message)
-  }
-}
+
 const uploadImage = async (req, res) => {
   const { uid } = req.headers;
   const file = req.file;
-  const validateFieldErrors = validationResult(req);
-  if (!validateFieldErrors.isEmpty()) {
-    res.status(404).send({ validateFieldErrors })
-    return;
-  } else if (!uid) {
+  if (!uid) {
     res.status(404).send({ message: "Uid not found" })
     return;
   }
@@ -88,4 +65,5 @@ const uploadImage = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { userRegister, createFirebaseToken, updateUserDetails, createPost, uploadImage }
+
+module.exports = { userRegister, createFirebaseToken, updateUserDetails, uploadImage }
