@@ -67,7 +67,7 @@ const uploadImage = async (req, res) => {
     res.status(404).send({ validateFieldErrors })
     return;
   } else if (!uid) {
-    res.status(404).send({ message: "Header uid not found" })
+    res.status(404).send({ message: "Uid not found" })
     return;
   }
   try {
@@ -79,11 +79,11 @@ const uploadImage = async (req, res) => {
         contentType: file.mimetype,
       },
     });
-    const downloadURL = await fileRef.getSignedUrl({
+    const imageDownloadURL = await fileRef.getSignedUrl({
       action: 'read',
       expires: '01-01-2040',
     });
-    res.status(200).send({ message: "Image uploaded successfully", downloadURL })
+    res.status(200).send({ message: "Image uploaded successfully", imageDownloadURL })
   } catch (err) {
     res.status(500).send(err.message)
   }
