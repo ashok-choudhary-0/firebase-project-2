@@ -2,11 +2,10 @@ const { matchedData } = require("express-validator");
 const { firestore } = require("firebase-admin");
 const slugify = require('slugify')
 const createPost = async (req, res) => {
-  const bodyData = matchedData(req);
+  const { description, slug, title, uid } = matchedData(req);
   try {
-    const postDoc= firestore().collection("posts").doc()
-    await postDoc.set({
-      title: bodyData.title, description: bodyData.description, slug: slugify(bodyData.slug), updatedAt: new Date(), createdAt: new Date(), updatedBy: bodyData.uid
+    await firestore().collection("posts").add({
+      title: title, description: description, slug: slugify(slug), updatedAt: new Date(), createdAt: new Date(), updatedBy: uid
     })
     res.status(200).send({ message: "Post created successfully" })
   } catch (err) {
