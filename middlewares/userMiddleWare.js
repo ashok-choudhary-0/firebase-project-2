@@ -10,7 +10,6 @@ const validateFields = [
 const validatePostFields = [
   body("title").notEmpty().withMessage("Title value cant be empty"),
   body("description").notEmpty().withMessage("Description value cant be empty"),
-  body("slug").notEmpty().withMessage("Slug value cant be empty"),
   header("uid").notEmpty().withMessage("Uid value cant be empty")
 ]
 const validateFieldErrors = (req, res, next) => {
