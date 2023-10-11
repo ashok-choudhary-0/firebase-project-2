@@ -10,5 +10,6 @@ router.post("/create-user-firebase-token", userController.createFirebaseToken)
 router.post("/update-user", userController.updateUserDetails)
 router.post("/create-new-post", [validatePostFields, validateFieldErrors], postController.createPost)
 router.post("/upload-image", [[header("uid").notEmpty()], validateFieldErrors, uploadImageToFirebase.single("image")], uploadImageController.uploadImage)
-router.post("/tag-user-in-post", [body("postUid").notEmpty(), body("userUid").notEmpty()], postController.tagUser)
+router.post("/tag-user", [[body("postUid").notEmpty(), body("userUid").notEmpty()], validateFieldErrors], postController.tagUser)
+router.post("/remove-tag-user", [[body("postUid").notEmpty(), body("userUid").notEmpty()], validateFieldErrors], postController.removeTagUser)
 module.exports = router;

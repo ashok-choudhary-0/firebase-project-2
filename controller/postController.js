@@ -14,16 +14,20 @@ const createPost = async (req, res) => {
 }
 const tagUser = async (req, res) => {
   const { postUid, userUid } = req.body;
-  const validateFieldErrors = validationResult(req);
-  if (!validateFieldErrors.isEmpty()) {
-    res.status(404).send({ validateFieldErrors })
-    return;
-  }
   try {
     await firestore().collection("posts").doc(postUid).collection("tagUsers").add({ userUid })
-    res.status(200).send({ message: "User tagged this post successfully" })
+    res.status(200).send({ message: "User tagged on this post successfully" })
   } catch (err) {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser }
+const removeTagUser = async (req, res) => {
+  const { postUid, userUid } = req.body;
+  try {
+    await firestore().collection("posts").doc(postUid).collection("tagUsers").doc(userUid).delete()
+    res.status(200).send({ message: "User tagged remove from this post." })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser }
