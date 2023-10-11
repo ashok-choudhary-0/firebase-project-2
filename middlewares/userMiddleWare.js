@@ -12,6 +12,10 @@ const validatePostFields = [
   body("description").notEmpty().withMessage("Description value cant be empty"),
   header("uid").notEmpty().withMessage("Uid value cant be empty")
 ]
+const validateTagUserFields = [
+  body("postUid").notEmpty().withMessage("postUid can't be empty"),
+  body("userUid").notEmpty().withMessage("userUid can't be empty")
+]
 const validateFieldErrors = (req, res, next) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -20,4 +24,4 @@ const validateFieldErrors = (req, res, next) => {
   }
   next();
 }
-module.exports = { validateFields, validatePostFields, validateFieldErrors }
+module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields }
