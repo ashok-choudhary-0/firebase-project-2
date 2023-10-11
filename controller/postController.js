@@ -30,4 +30,29 @@ const removeTagUser = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser }
+const allPosts = async (req, res) => {
+  const { page, limit } = matchedData(req);
+  let allPosts = []
+  try {
+    const postsRef = firestore().collection('posts');
+    const snapshot = await postsRef.get();
+    snapshot.forEach(doc => {
+      let dataPost = doc.data()
+      dataPost.id = doc.id
+      dataPost.tagUser = []
+      allPosts.push(dataPost)
+    });
+
+    allPosts.forEach(async (item) => {
+      const tagRef = firestore().collection(`posts/${item.id}/tagUsers`);
+      const snapshot = await tagRef.get();
+      snapshot.forEach(doc => {
+        item.tagUser.push(doc.data())
+      });
+    })
+    res.send(allPosts)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts }
