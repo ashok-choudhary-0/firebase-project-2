@@ -1,4 +1,4 @@
-const { matchedData } = require("express-validator");
+const { matchedData, validationResult } = require("express-validator");
 const { firestore } = require("firebase-admin");
 const slugify = require('slugify')
 const createPost = async (req, res) => {
@@ -12,4 +12,22 @@ const createPost = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost }
+const tagUser = async (req, res) => {
+  const { postUid, userUid } = req.body;
+  try {
+    await firestore().collection("posts").doc(postUid).collection("tagUsers").add({ userUid })
+    res.status(200).send({ message: "User tagged on this post successfully" })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+const removeTagUser = async (req, res) => {
+  const { postUid, userUid } = req.body;
+  try {
+    await firestore().collection("posts").doc(postUid).collection("tagUsers").doc(userUid).delete()
+    res.status(200).send({ message: "User tagged remove from this post." })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser }
