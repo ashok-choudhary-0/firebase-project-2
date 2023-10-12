@@ -18,17 +18,17 @@ const validateTagUserFields = [
 ]
 const validateAddCommentFields = [
   body("comment").notEmpty().withMessage("comment can not be empty"),
- body("userUid").notEmpty().withMessage("userUid can not be empty"),
+  body("userUid").notEmpty().withMessage("userUid can not be empty"),
   body("postUid").notEmpty().withMessage("postUid can not be empty")
 ]
 const validateDeleteCommentFields = [
   body("postUid").notEmpty().withMessage("postUid can not be empty"),
-   body("commentUid").notEmpty().withMessage("commentUid can not be empty")
+  body("commentUid").notEmpty().withMessage("commentUid can not be empty")
 ]
 const validateEditCommentFields = [
   body("postUid").notEmpty().withMessage("postUid can not be empty"),
-   body("commentUid").notEmpty().withMessage("commentUid can not empty"),
-    body("comment").notEmpty().withMessage("comment can not be empty")
+  body("commentUid").notEmpty().withMessage("commentUid can not empty"),
+  body("comment").notEmpty().withMessage("comment can not be empty")
 ]
 const validateFieldErrors = (req, res, next) => {
   const validateFieldErrors = validationResult(req);
