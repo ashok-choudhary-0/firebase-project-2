@@ -60,12 +60,12 @@ const allPosts = async (req, res) => {
   }
 }
 const addCommentOnPost = async (req, res) => {
-  const { userUid, commentTitle, postUid } = matchedData(req);
+  const { userUid, comment, postUid } = matchedData(req);
   const postRef = firestore().collection(`posts`).doc(postUid)
   try {
     const postData = await postRef.get();
     if (postData.exists) {
-      await postRef.collection("comments").add({ userUid, commentTitle, createdAt: new Date(), updatedAt: new Date() })
+      await postRef.collection("comments").add({ userUid, comment, createdAt: new Date(), updatedAt: new Date() })
       return res.status(200).send({ message: "You commented successfully on this post" })
     }
     res.status(200).send({ message: "No post found on this postUid" })
@@ -83,10 +83,10 @@ const deleteCommentOnPost = async (req, res) => {
   }
 }
 const editCommentOnPost = async (req, res) => {
-  const { postUid, commentUid, commentTitle } = matchedData(req);
+  const { postUid, commentUid, comment } = matchedData(req);
   try {
     await firestore().collection(`posts`).doc(postUid).collection("comments").doc(commentUid).update({
-      commentTitle, updatedAt: new Date()
+      comment, updatedAt: new Date()
     })
     res.status(200).send({ message: "Comment edited successfully" })
   } catch (err) {
