@@ -59,12 +59,12 @@ const allPosts = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-const addComment = async (req, res) => {
+const addCommentOnPost = async (req, res) => {
   const { userUid, commentTitle, postUid } = matchedData(req);
   const postRef = firestore().collection(`posts`).doc(postUid)
   try {
-    const postSnapshot = await postRef.get();
-    if (postSnapshot.exists) {
+    const postData = await postRef.get();
+    if (postData.exists) {
       await postRef.collection("comments").add({ userUid, commentTitle, createdAt: new Date(), updatedAt: new Date() })
       return res.status(200).send({ message: "You commented successfully on this post" })
     }
@@ -73,7 +73,7 @@ const addComment = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-const deleteComment = async (req, res) => {
+const deleteCommentOnPost = async (req, res) => {
   const { postUid, commentUid } = matchedData(req);
   try {
     await firestore().collection(`posts`).doc(postUid).collection("comments").doc(commentUid).delete()
@@ -82,7 +82,7 @@ const deleteComment = async (req, res) => {
     res.status(500).send(err)
   }
 }
-const editComment = async (req, res) => {
+const editCommentOnPost = async (req, res) => {
   const { postUid, commentUid, commentTitle } = matchedData(req);
   try {
     await firestore().collection(`posts`).doc(postUid).collection("comments").doc(commentUid).update({
@@ -93,4 +93,4 @@ const editComment = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser, allPosts, addComment, deleteComment, editComment }
+module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost }
