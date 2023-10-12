@@ -30,4 +30,33 @@ const removeTagUser = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser }
+const allPosts = async (req, res) => {
+  const page = +(req.params.page);
+  const limit = +(req.query.limit);
+  try {
+    const postsRef = firestore().collection('posts');
+    const snapshot = await postsRef
+      .limit(limit)
+      .offset((page - 1) * limit)
+      .get();
+    const allPosts = [];
+    for (const doc of snapshot.docs) {
+      const dataPost = doc.data();
+      dataPost.id = doc.id;
+      dataPost.tagUser = [];
+      const tagRef = firestore().collection(`posts/${doc.id}/tagUsers`);
+      const tagSnapshot = await tagRef.get();
+      tagSnapshot.forEach(tagDoc => {
+        dataPost.tagUser.push(tagDoc.data().userUid);
+      });
+      allPosts.push(dataPost);
+    }
+    if (allPosts.length === 0) {
+      return res.status(200).send({ message: "Opps no data found on this page, please visit previous pages" })
+    }
+    res.status(200).send(allPosts)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts }
