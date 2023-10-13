@@ -1,6 +1,7 @@
 const { matchedData, validationResult } = require("express-validator");
 const { firestore } = require("firebase-admin");
-const slugify = require('slugify')
+const slugify = require('slugify');
+const { getCollectionData } = require("../helper/helperFunction");
 const createPost = async (req, res) => {
   const { description, title, uid } = matchedData(req);
   try {
@@ -98,4 +99,23 @@ const editCommentOnPost = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost }
+const getSinglePost = async (req, res) => {
+  const { postUid } = matchedData(req);
+  try {
+    const postData = (await firestore().collection("posts").doc(postUid).get()).data()
+    postData.tagUsers = [];
+    const tagUsers = await getCollectionData(`posts/${postUid}/tagUsers`);
+    tagUsers.forEach((user) => {
+      postData.tagUsers.push(user.data());
+    })
+    const allComments = await getCollectionData(`posts/${postUid}/comments`);
+    postData.comments = [];
+    allComments.forEach((comment) => {
+      postData.comments.push(comment.data())
+    })
+    res.send(postData)
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost }

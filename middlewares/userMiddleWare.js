@@ -30,6 +30,9 @@ const validateEditCommentFields = [
   body("commentUid").notEmpty().withMessage("commentUid can not empty"),
   body("comment").notEmpty().withMessage("comment can not be empty")
 ]
+const validateSinglePostFields = [
+  body("postUid").notEmpty().withMessage("postUid can not be empty")
+]
 const validateFieldErrors = (req, res, next) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -38,4 +41,4 @@ const validateFieldErrors = (req, res, next) => {
   }
   next();
 }
-module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields }
+module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields }
