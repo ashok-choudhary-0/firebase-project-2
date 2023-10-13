@@ -106,7 +106,7 @@ const getSinglePost = async (req, res) => {
     postData.tagUsers = [];
     const tagUsers = await getCollectionData(`posts/${postUid}/tagUsers`);
     tagUsers.forEach((user) => {
-      postData.tagUsers.push(user.data().userUid);
+      postData.tagUsers.push(user.data());
     })
     const allComments = await getCollectionData(`posts/${postUid}/comments`);
     postData.comments = [];
