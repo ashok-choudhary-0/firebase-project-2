@@ -44,11 +44,16 @@ const allPosts = async (req, res) => {
       const dataPost = doc.data();
       dataPost.id = doc.id;
       dataPost.tagUser = [];
+      dataPost.comments = [];
       const tagRef = firestore().collection(`posts/${doc.id}/tagUsers`);
       const tagSnapshot = await tagRef.get();
       tagSnapshot.forEach(tagDoc => {
         dataPost.tagUser.push(tagDoc.data().userUid);
       });
+      const allComments = await firestore().collection(`posts/${doc.id}/comments`).get();
+      allComments.forEach((comment) => {
+        dataPost.comments.push(comment.data());
+      })
       allPosts.push(dataPost);
     }
     if (allPosts.length === 0) {
