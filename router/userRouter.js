@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields } = require("../middlewares/userMiddleWare")
+const { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationFields } = require("../middlewares/userMiddleWare")
 const userController = require("../controller/userController")
 const postController = require("../controller/postController")
 const { uploadImageToFirebase } = require("../controller/uploadImage");
@@ -17,4 +17,5 @@ router.post("/add-comment", [validateAddCommentFields, validateFieldErrors], pos
 router.delete("/delete-comment", [validateDeleteCommentFields, validateFieldErrors], postController.deleteCommentOnPost)
 router.patch("/edit-comment", [validateEditCommentFields, validateFieldErrors], postController.editCommentOnPost)
 router.get("/get-single-post", [validateSinglePostFields, validateFieldErrors], postController.getSinglePost)
+router.post("/send-push-notification", [pushNotificationFields, validateFieldErrors], postController.sendPushNotification)
 module.exports = router;

@@ -2,6 +2,7 @@ const { matchedData, validationResult } = require("express-validator");
 const { firestore } = require("firebase-admin");
 const slugify = require('slugify');
 const { getCollectionData } = require("../helper/helperFunction");
+const admin = require("firebase-admin")
 const createPost = async (req, res) => {
   const { description, title, uid } = matchedData(req);
   try {
@@ -118,4 +119,19 @@ const getSinglePost = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost }
+const sendPushNotification = async (req, res) => {
+  const { title, body, token } = matchedData(req);
+  try {
+    const message = {
+      notification: {
+        title, body
+      },
+      token
+    }
+    const response = await admin.messaging().send(message)
+    res.status(200).send({ message: "Notification send to user successfully", response })
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost, sendPushNotification }
