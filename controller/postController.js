@@ -59,4 +59,38 @@ const allPosts = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser, allPosts }
+const addCommentOnPost = async (req, res) => {
+  const { userUid, comment, postUid } = matchedData(req);
+  const postRef = firestore().collection(`posts`).doc(postUid)
+  try {
+    const postData = await postRef.get();
+    if (postData.exists) {
+      await postRef.collection("comments").add({ userUid, comment, createdAt: new Date(), updatedAt: new Date() })
+      return res.status(200).send({ message: "You commented successfully on this post" })
+    }
+    res.status(200).send({ message: "No post found on this postUid" })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
+const deleteCommentOnPost = async (req, res) => {
+  const { postUid, commentUid } = matchedData(req);
+  try {
+    await firestore().collection(`posts`).doc(postUid).collection("comments").doc(commentUid).delete()
+    res.status(200).send({ message: "Comment deleted successfully" })
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+const editCommentOnPost = async (req, res) => {
+  const { postUid, commentUid, comment } = matchedData(req);
+  try {
+    await firestore().collection(`posts`).doc(postUid).collection("comments").doc(commentUid).update({
+      comment, updatedAt: new Date()
+    })
+    res.status(200).send({ message: "Comment edited successfully" })
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost }
