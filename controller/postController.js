@@ -1,4 +1,4 @@
-const { matchedData, validationResult } = require("express-validator");
+const { matchedData } = require("express-validator");
 const { firestore } = require("firebase-admin");
 const slugify = require('slugify');
 const { getCollectionData } = require("../helper/helperFunction");
@@ -73,8 +73,11 @@ const addCommentOnPost = async (req, res) => {
     const postData = await postRef.get();
     if (postData.exists) {
       await postRef.collection("comments").add({ userUid, comment, createdAt: new Date(), updatedAt: new Date() })
-      const postUserUid = postData.updatedBy
-      await sendPushNotification(userUid, postUserUid, postUid)
+      const postUserUid = postData.data().updatedBy
+      const userNotificationToken = (await firestore().collection("users").doc(postUserUid).get()).data().pushNotificationToken
+      const commentedUser = (await firestore().collection("users").doc(userUid).get()).data().firstName
+      const postTitle = await postData.data().title
+      await sendPushNotification(commentedUser, userNotificationToken, postTitle)
       return res.status(200).send({ message: "You commented successfully on this post" })
     }
     res.status(200).send({ message: "No post found on this postUid" })
@@ -121,18 +124,18 @@ const getSinglePost = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-const sendPushNotification = async (req, res, commentedUserUid, postUserUid, postUid) => {
+const sendPushNotification = async (commentedUser, userNotificationToken, postTitle) => {
   try {
     const message = {
       notification: {
-        body: `${commentedUserUid} commented on your post ${postUid}`,
+        body: `${commentedUser} commented on your post ${postTitle}`,
       },
-      token: postUserUid
+      token: userNotificationToken
     }
-    const response = await admin.messaging().send(message)
-    res.status(200).send({ message: "Notification send to user successfully", response })
+    await admin.messaging().send(message)
+    console.log("Notification send to user successfully")
   } catch (err) {
-    res.status(500).send(err.message);
+    console.log(err.message)
   }
 }
 module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost, sendPushNotification }
