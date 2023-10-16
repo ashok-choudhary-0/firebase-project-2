@@ -33,6 +33,10 @@ const validateEditCommentFields = [
 const validateSinglePostFields = [
   body("postUid").notEmpty().withMessage("postUid can not be empty")
 ]
+const pushNotificationTokenFields = [
+  header("token").notEmpty().withMessage("target FCM token can not be empty"),
+  header('uuid').notEmpty().withMessage("userUid can not be empty")
+]
 const validateFieldErrors = (req, res, next) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -41,4 +45,4 @@ const validateFieldErrors = (req, res, next) => {
   }
   next();
 }
-module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields }
+module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationTokenFields }

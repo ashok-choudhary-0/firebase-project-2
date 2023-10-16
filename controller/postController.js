@@ -1,7 +1,8 @@
-const { matchedData, validationResult } = require("express-validator");
+const { matchedData } = require("express-validator");
 const { firestore } = require("firebase-admin");
 const slugify = require('slugify');
 const { getCollectionData } = require("../helper/helperFunction");
+const admin = require("firebase-admin")
 const createPost = async (req, res) => {
   const { description, title, uid } = matchedData(req);
   try {
@@ -72,6 +73,11 @@ const addCommentOnPost = async (req, res) => {
     const postData = await postRef.get();
     if (postData.exists) {
       await postRef.collection("comments").add({ userUid, comment, createdAt: new Date(), updatedAt: new Date() })
+      const postUserUid = postData.data().updatedBy
+      const userNotificationToken = (await firestore().collection("users").doc(postUserUid).get()).data().pushNotificationToken
+      const commentedUser = (await firestore().collection("users").doc(userUid).get()).data().firstName
+      const postTitle = await postData.data().title
+      await sendPushNotification(commentedUser, userNotificationToken, postTitle)
       return res.status(200).send({ message: "You commented successfully on this post" })
     }
     res.status(200).send({ message: "No post found on this postUid" })
@@ -118,4 +124,18 @@ const getSinglePost = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost }
+const sendPushNotification = async (commentedUser, userNotificationToken, postTitle) => {
+  try {
+    const message = {
+      data: {
+        title: `${commentedUser} commented on your post ${postTitle}`,
+      },
+      token: userNotificationToken
+    }
+    await admin.messaging().send(message)
+    console.log("Notification send to user successfully")
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+module.exports = { createPost, tagUser, removeTagUser, allPosts, addCommentOnPost, deleteCommentOnPost, editCommentOnPost, getSinglePost, sendPushNotification }
