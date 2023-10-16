@@ -127,8 +127,8 @@ const getSinglePost = async (req, res) => {
 const sendPushNotification = async (commentedUser, userNotificationToken, postTitle) => {
   try {
     const message = {
-      notification: {
-        body: `${commentedUser} commented on your post ${postTitle}`,
+      data: {
+        title: `${commentedUser} commented on your post ${postTitle}`,
       },
       token: userNotificationToken
     }
