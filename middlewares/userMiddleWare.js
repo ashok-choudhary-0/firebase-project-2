@@ -33,11 +33,6 @@ const validateEditCommentFields = [
 const validateSinglePostFields = [
   body("postUid").notEmpty().withMessage("postUid can not be empty")
 ]
-const pushNotificationFields = [
-  header("token").notEmpty().withMessage("target FCM token can not be empty"),
-  body("title").notEmpty().withMessage("push notification title can not be empty"),
-  body("body").notEmpty().withMessage("push notification body can not be empty")
-]
 const pushNotificationTokenFields = [
   header("token").notEmpty().withMessage("target FCM token can not be empty"),
   header('uuid').notEmpty().withMessage("userUid can not be empty")

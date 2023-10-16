@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationFields, pushNotificationToken, pushNotificationTokenFields } = require("../middlewares/userMiddleWare")
+const { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationTokenFields } = require("../middlewares/userMiddleWare")
 const userController = require("../controller/userController")
 const postController = require("../controller/postController")
 const { uploadImageToFirebase } = require("../controller/uploadImage");
