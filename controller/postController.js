@@ -73,6 +73,8 @@ const addCommentOnPost = async (req, res) => {
     const postData = await postRef.get();
     if (postData.exists) {
       await postRef.collection("comments").add({ userUid, comment, createdAt: new Date(), updatedAt: new Date() })
+      const postUserUid = postData.updatedBy
+      await sendPushNotification(userUid, postUserUid, postUid)
       return res.status(200).send({ message: "You commented successfully on this post" })
     }
     res.status(200).send({ message: "No post found on this postUid" })
@@ -119,14 +121,13 @@ const getSinglePost = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
-const sendPushNotification = async (req, res) => {
-  const { title, body, token } = matchedData(req);
+const sendPushNotification = async (req, res, commentedUserUid, postUserUid, postUid) => {
   try {
     const message = {
       notification: {
-        title, body
+        body: `${commentedUserUid} commented on your post ${postUid}`,
       },
-      token
+      token: postUserUid
     }
     const response = await admin.messaging().send(message)
     res.status(200).send({ message: "Notification send to user successfully", response })

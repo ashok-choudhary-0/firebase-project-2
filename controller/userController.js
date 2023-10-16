@@ -39,5 +39,14 @@ const updateUserDetails = async (req, res) => {
     res.status(500).send(err.message)
   }
 }
+const saveUserNotificationToken = async (req, res) => {
+  const { token, uuid } = matchedData(req);
+  try {
+    await firestore().collection("users").doc(uuid).update({ pushNotificationToken: token })
+    res.status(200).send({ message: "Push notification token added to database successfully" })
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+}
 
-module.exports = { userRegister, createFirebaseToken, updateUserDetails }
+module.exports = { userRegister, createFirebaseToken, updateUserDetails, saveUserNotificationToken }

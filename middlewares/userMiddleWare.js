@@ -38,6 +38,10 @@ const pushNotificationFields = [
   body("title").notEmpty().withMessage("push notification title can not be empty"),
   body("body").notEmpty().withMessage("push notification body can not be empty")
 ]
+const pushNotificationTokenFields = [
+  header("token").notEmpty().withMessage("target FCM token can not be empty"),
+  header('uuid').notEmpty().withMessage("userUid can not be empty")
+]
 const validateFieldErrors = (req, res, next) => {
   const validateFieldErrors = validationResult(req);
   if (!validateFieldErrors.isEmpty()) {
@@ -46,4 +50,4 @@ const validateFieldErrors = (req, res, next) => {
   }
   next();
 }
-module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationFields }
+module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationFields, pushNotificationTokenFields }
