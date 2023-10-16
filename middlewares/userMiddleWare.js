@@ -45,4 +45,4 @@ const validateFieldErrors = (req, res, next) => {
   }
   next();
 }
-module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationFields, pushNotificationTokenFields }
+module.exports = { validateFields, validatePostFields, validateFieldErrors, validateTagUserFields, validateAddCommentFields, validateDeleteCommentFields, validateEditCommentFields, validateSinglePostFields, pushNotificationTokenFields }
