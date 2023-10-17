@@ -1,0 +1,649 @@
+{
+	"info": {
+		"_postman_id": "c39a67cf-fadf-4f4d-9d42-468309f7d735",
+		"name": "firebase-project-2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29729553"
+	},
+	"item": [
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be parsable json\",()=>{\r",
+							"    pm.expect(jsonResponse).to.be.ok\r",
+							"})\r",
+							"pm.test(\"Response body should be in correct format\",()=>{\r",
+							"    pm.expect(jsonResponse).to.be.a('object');\r",
+							"})\r",
+							"pm.test(\"firstName, lastName, mobileNo,email,password and confirmPassword should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"firstName\");\r",
+							"    pm.expect(requestBody).to.include(\"lastName\");\r",
+							"    pm.expect(requestBody).to.include(\"mobileNo\");\r",
+							"    pm.expect(requestBody).to.include(\"email\");\r",
+							"    pm.expect(requestBody).to.include(\"password\");\r",
+							"    pm.expect(requestBody).to.include(\"confirmPassword\");\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"User created and data uploaded successfully\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"hello world\",\r\n    \"lastName\":\"choudhary\",\r\n    \"mobileNo\":\"9876543210\",\r\n    \"email\":\"helloworld35@gmail.com\",\r\n    \"password\":\"admin123\",\r\n    \"confirmPassword\":\"admin123\",\r\n    \"profilePhoto\":\"image.png\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/register"
+			},
+			"response": []
+		},
+		{
+			"name": "createFirebaseToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const response = pm.response.text();\r",
+							"pm.test(\"The 'token' property should be a string\", () => {\r",
+							"    pm.expect(response).to.be.a('string');\r",
+							"});\r",
+							"pm.test(\"uid should be present in header\", function () {\r",
+							"    pm.request.to.have.header(\"uid\");\r",
+							"});\r",
+							"pm.test(\"email and password should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"email\");\r",
+							"    pm.expect(requestBody).to.include(\"password\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "uid",
+						"value": "SUi6nYSQpRQ4Bsf1PmX56Ct7Yft2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"ashok1@gmail.com\",\r\n    \"password\":\"ashok\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/create-user-firebase-token"
+			},
+			"response": []
+		},
+		{
+			"name": "update-user-details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"User data updated successfully\");\r",
+							"});\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.request.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "uid",
+						"value": "u1gpZ688xNMDNjl2fWLBcPqhI9a2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"updated3244\",\r\n    \"lastName\":\"user\",\r\n    \"mobileNo\":\"1234567890\",\r\n    \"profilePhoto\":\"image2.jpg\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/update-user"
+			},
+			"response": []
+		},
+		{
+			"name": "create-new-post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Post created successfully\");\r",
+							"});\r",
+							"pm.test(\"uid should be present in header\", function () {\r",
+							"    pm.request.to.have.header(\"uid\");\r",
+							"});\r",
+							"pm.test(\"title, description and slug should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"title\");\r",
+							"    pm.expect(requestBody).to.include(\"description\");\r",
+							"    pm.expect(requestBody).to.include(\"slug\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "uid",
+						"value": "FhpH2r2bn4R7HuQgASo3Q7346FA3",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"first title\",\r\n    \"description\":\"first description\",\r\n    \"slug\":\"create new postasdf by me\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/create-new-post"
+			},
+			"response": []
+		},
+		{
+			"name": "upload-image",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Image uploaded successfully\");\r",
+							"});\r",
+							"pm.test(\"uid should be present in header\", function () {\r",
+							"    pm.request.to.have.header(\"uid\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "uid",
+						"value": "u1gpZ688xNMDNjl2fWLBcPqhI9a2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/saura/Downloads/alex-machado-80sv993lUKI-unsplash.jpg"
+						}
+					]
+				},
+				"url": "http://localhost:8000/user/upload-image"
+			},
+			"response": []
+		},
+		{
+			"name": "tag-user-to-post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"User tagged on this post successfully\");\r",
+							"});\r",
+							"pm.test(\"postUid and userUid should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"    pm.expect(requestBody).to.include(\"userUid\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"postUid\":\"tES87miMsLmQZS2BAXTY\",\r\n    \"userUid\":\"6TSpDAKr2sVyRcE7Xqgx\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/tag-user"
+			},
+			"response": []
+		},
+		{
+			"name": "remove-tag-user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"User tagged remove from this post.\");\r",
+							"});\r",
+							"pm.test(\"postUid and userUid should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"    pm.expect(requestBody).to.include(\"userUid\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"postUid\":\"KF6c36Lqjt9SmftdwG4U\",\r\n    \"userUid\":\"6TSpDAKr2sVyRcE7Xqgx\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/remove-tag-user"
+			},
+			"response": []
+		},
+		{
+			"name": "get all posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/user/all-posts/1?limit=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"all-posts",
+						"1"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add-comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"You commented successfully on this post\");\r",
+							"});\r",
+							"pm.test(\"postUid, userUid and comment should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"userUid\");\r",
+							"    pm.expect(requestBody).to.include(\"comment\");\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userUid\":\"FhpH2r2bn4R7HuQgASo3Q7346FA3\",\r\n    \"comment\":\"Hello world\",\r\n    \"postUid\":\"KF6c36Lqjt9SmftdwG4U\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/add-comment"
+			},
+			"response": []
+		},
+		{
+			"name": "delete-comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successfull message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Comment deleted successfully\");\r",
+							"});\r",
+							"pm.test(\"postUid and commentUid should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"commentUid\");\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"commentUid\":\"jHLC26ZLFZf2my7rCoET\",\r\n    \"postUid\":\"tES87miMsLmQZS2BAXTY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/delete-comment"
+			},
+			"response": []
+		},
+		{
+			"name": "edit-comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Comment edited successfully\");\r",
+							"});\r",
+							"pm.test(\"postUid, commentUid and comment should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"commentUid\");\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"    pm.expect(requestBody).to.include(\"comment\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"commentUid\":\"jHLC26ZLFZf2my7rCoET\",\r\n    \"postUid\":\"tES87miMsLmQZS2BAXTY\",\r\n    \"comment\":\"this is my updated two comment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/edit-comment"
+			},
+			"response": []
+		},
+		{
+			"name": "get-single-post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"postUid should be present in body data\", function () {\r",
+							"    const requestBody = pm.request.body.toString();\r",
+							"    pm.expect(requestBody).to.include(\"postUid\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"postUid\":\"KF6c36Lqjt9SmftdwG4U\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/get-single-post"
+			},
+			"response": []
+		},
+		{
+			"name": "save-user-notification-token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"const jsonResponse = pm.response.json();\r",
+							"pm.test(\"Response should be a parsable JSON\", function() {\r",
+							"    pm.expect(jsonResponse).to.be.ok;\r",
+							"});\r",
+							"pm.test(\"Response body contains register successful message\",function(){\r",
+							"    pm.expect(jsonResponse.message).to.eql(\"Push notification token added to database successfully\");\r",
+							"});\r",
+							"pm.test(\"token and uuid should be present in header\", function () {\r",
+							"    pm.request.to.have.header(\"token\");\r",
+							"    pm.request.to.have.header(\"uuid\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "dtu2EslkmoeNCf_TE7aEEL:APA91bEdr6QgGe70bNABNhboZrpg2wUTMxzTv0ItNkn0iEOlEUWKyzhBZQLF4G81Q_12o0MRaKYBpQySOFJoFMlUC6fz5Ku2NrRCnB4djogrMefy-yKPB9jH2rQFowmxE-PMIO6MW1-v",
+						"type": "text"
+					},
+					{
+						"key": "userUid",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "uuid",
+						"value": "AtiLAlBKqQbdAtKIuGSUfoO3hgj1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/user/save-user-notification-token"
+			},
+			"response": []
+		}
+	]
+}
