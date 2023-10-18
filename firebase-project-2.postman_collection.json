@@ -49,7 +49,7 @@
 							"pm.test(\"Response body contains register successful message\", function () {\r",
 							"    try {\r",
 							"        const jsonResponse = pm.response.json();\r",
-							"        pm.expect(jsonResponse.message).to.eql(\"User created and data uploaded \");\r",
+							"        pm.expect(jsonResponse.message).to.eql(\"User created and data uploaded successfully \");\r",
 							"    } catch (e) {\r",
 							"        pm.expect.fail(\"Response is not a valid JSON\");\r",
 							"    }\r",
