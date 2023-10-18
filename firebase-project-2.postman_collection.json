@@ -17,7 +17,7 @@
 							"pm.test(\"Response is ok and status should be 200\", () => {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"pm.test(\"Email already exists\", () => {\r",
+							"pm.test(\"Does Email already exists\", () => {\r",
 							"    pm.response.to.have.status(500);\r",
 							"    pm.expect(pm.response.text()).to.include(\"The email address is already in use by another account\");\r",
 							"});\r",
