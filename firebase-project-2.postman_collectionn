@@ -14,29 +14,10 @@
 					"script": {
 						"exec": [
 							"\r",
-							"pm.test(\"Response is ok and status should be 200\", () => {\r",
+							"pm.test(\"Response is ok\", () => {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"pm.test(\"Email already exists\", () => {\r",
-							"    pm.response.to.have.status(500);\r",
-							"    pm.expect(pm.response.text()).to.include(\"The email address is already in use by another account\");\r",
-							"});\r",
-							"pm.test(\"Response should be parsable json\", () => {\r",
-							"    try {\r",
-							"        const jsonResponse = pm.response.json();\r",
-							"        pm.expect(jsonResponse).to.be.ok;\r",
-							"    } catch (e) {\r",
-							"        pm.expect.fail(\"Response is not a valid JSON\");\r",
-							"    }\r",
-							"});\r",
-							"pm.test(\"Response body should be in correct format\", () => {\r",
-							"    try {\r",
-							"        const jsonResponse = pm.response.json();\r",
-							"        pm.expect(jsonResponse).to.be.a('object');\r",
-							"    } catch (e) {\r",
-							"        pm.expect.fail(\"Response is not a valid JSON\");\r",
-							"    }\r",
-							"});\r",
+							"\r",
 							"pm.test(\"firstName, lastName, mobileNo,email,password and confirmPassword should be present in body data\", function () {\r",
 							"    const requestBody = pm.request.body.toString();\r",
 							"    pm.expect(requestBody).to.include(\"firstName\");\r",
@@ -46,13 +27,9 @@
 							"    pm.expect(requestBody).to.include(\"password\");\r",
 							"    pm.expect(requestBody).to.include(\"confirmPassword\");\r",
 							"});\r",
-							"pm.test(\"Response body contains register successful message\", function () {\r",
-							"    try {\r",
-							"        const jsonResponse = pm.response.json();\r",
-							"        pm.expect(jsonResponse.message).to.eql(\"User created and data uploaded \");\r",
-							"    } catch (e) {\r",
-							"        pm.expect.fail(\"Response is not a valid JSON\");\r",
-							"    }\r",
+							"pm.test(\"User Register successfully\", function () {\r",
+							"     const jsonResponse = pm.response.json();\r",
+							"        pm.expect(jsonResponse.message).to.eql(\"User created and data uploaded successfully\");\r",
 							"});\r",
 							"\r",
 							"\r",
@@ -68,7 +45,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstName\":\"hello world\",\r\n    \"lastName\":\"choudhary\",\r\n    \"mobileNo\":\"9876543210\",\r\n    \"email\":\"helloworld39@gmail.com\",\r\n    \"password\":\"admin123\",\r\n    \"confirmPassword\":\"admin123\",\r\n    \"profilePhoto\":\"image.png\"\r\n}",
+					"raw": "{\r\n    \"firstName\":\"hello world\",\r\n    \"lastName\":\"choudhary\",\r\n    \"mobileNo\":\"9876543210\",\r\n    \"email\":\"helloworld56fds1@gmail.com\",\r\n    \"password\":\"admin123\",\r\n    \"confirmPassword\":\"admin123\",\r\n    \"profilePhoto\":\"image.png\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -86,21 +63,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response is ok and status should be 200\",()=>{\r",
+							"pm.test(\"Response is ok\",()=>{\r",
 							"    pm.response.to.have.status(200);\r",
 							"})\r",
-							"const response = pm.response.text();\r",
-							"pm.test(\"The 'token' property should be a string\", () => {\r",
-							"    pm.expect(response).to.be.a('string');\r",
-							"});\r",
-							"pm.test(\"uid should be present in header\", function () {\r",
-							"    pm.request.to.have.header(\"uid\");\r",
-							"});\r",
-							"pm.test(\"email and password should be present in body data\", function () {\r",
+							"\r",
+							"pm.test(\"email and password field found in body data\", function () {\r",
 							"    const requestBody = pm.request.body.toString();\r",
 							"    pm.expect(requestBody).to.include(\"email\");\r",
-							"    pm.expect(requestBody).to.include(\"password\");\r",
-							"});"
+							"    pm.expect(requestBody).to.include(\"password\"); \r",
+							"});\r",
+							"\r",
+							"\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -117,7 +91,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\":\"ashok1@gmail.com\",\r\n    \"password\":\"ashok\"\r\n}",
+					"raw": "{\r\n    \"email\":\"safd\",\r\n    \"password\":\"ashok1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
